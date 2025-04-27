@@ -1,106 +1,118 @@
-// src/components/Profile.js
-import React, { useEffect } from 'react';
-import { Box, Typography, Card, CardContent, IconButton } from '@mui/material';
-import { GitHub, LinkedIn, Twitter, Email } from '@mui/icons-material';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import { keyframes } from '@mui/material/styles';
+// src/components/ContactSection.js
+import React from 'react';
+import { Box, Typography, Button } from '@mui/material';
+import { FaEnvelope, FaLinkedin, FaGithub, FaTwitter } from 'react-icons/fa';
 
-const fadeSlideUp = keyframes`
-  0% { opacity: 0; transform: translateY(30px); }
-  100% { opacity: 1; transform: translateY(0); }
-`;
-
-const Profile = () => {
-  const text = "Hello! I am Sonali";
-
-  useEffect(() => {
-    AOS.init({
-      duration: 1200,
-      once: true,
-      easing: 'ease-out-cubic',
-    });
-  }, []);
-
+const ContactSection = () => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        background: 'linear-gradient(135deg, #e2eafc, #d7e3fc, #ccdbfd)',
-        padding: 2,
+    <Box 
+      id="contact" 
+      sx={{ 
+        padding: { xs: '40px 20px', md: '30px 0px 0px 0px' }, 
+        textAlign: 'center' 
       }}
     >
-      <Card
+      {/* Heading */}
+      <Typography
+        variant="h3"
         sx={{
-          animation: `${fadeSlideUp} 1s ease`,
-          padding: 4,
-          borderRadius: 4,
-          boxShadow: 4,
-          backgroundColor: 'rgba(255, 255, 255, 0.7)', // transparent white
-          backdropFilter: 'blur(10px)', // glass effect
-          maxWidth: 500,
-          textAlign: 'center',
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: '700',
+          marginBottom: '20px',
+          color: '#3d2c1e',
+          textShadow: '0px 0px 8px rgba(255,255,255,0.5)',
         }}
-        data-aos="fade-up"
       >
-        <CardContent>
-          <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
-            {text}
-          </Typography>
+        Contact Me
+      </Typography>
 
-          <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
-            I am a Full Stack Web Developer and Mobile App Developer
-          </Typography>
+      {/* Subheading */}
+      <Typography
+        variant="h6"
+        sx={{
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: '500',
+          marginBottom: '40px',
+          color: '#5c4033',
+          textShadow: '0px 0px 6px rgba(255,255,255,0.4)',
+          px: { xs: 2, md: 0 },
+        }}
+      >
+        Working on something exciting? I would love to collaborate!
+      </Typography>
 
-          {/* Social Icons */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-          <IconButton
-              component="a"
-              href="mailto: sonalibiswas242@gmail.com" // optional email
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Email fontSize="large" />
-            </IconButton>
+      {/* Links Section */}
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          flexWrap: 'wrap', 
+          gap: { xs: 2, md: 3 }, 
+          maxWidth: '700px', 
+          mx: 'auto' 
+        }}
+      >
+        <Button
+          component="a"
+          href="mailto:sonalibiswas242@gmail.com"
+          startIcon={<FaEnvelope />}
+          sx={linkButtonStyle}
+        >
+          Email
+        </Button>
 
-            <IconButton
-              component="a"
-              href="https://www.linkedin.com/in/sonalibiswas242/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <LinkedIn fontSize="large" />
-            </IconButton>
+        <Button
+          component="a"
+          href="https://www.linkedin.com/in/sonalibiswas242/"
+          target="_blank"
+          rel="noopener noreferrer"
+          startIcon={<FaLinkedin />}
+          sx={linkButtonStyle}
+        >
+          LinkedIn
+        </Button>
 
-            <IconButton
-              component="a"
-              href="https://github.com/sonalibiswas242" 
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <GitHub fontSize="large" />
-            </IconButton>
+        <Button
+          component="a"
+          href="https://github.com/sonalibiswas242"
+          target="_blank"
+          rel="noopener noreferrer"
+          startIcon={<FaGithub />}
+          sx={linkButtonStyle}
+        >
+          GitHub
+        </Button>
 
-            
-
-            <IconButton
-              component="a"
-              href="https://x.com/Shonaaaliii" 
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Twitter fontSize="large" />
-            </IconButton>
-
-            
-          </Box>
-        </CardContent>
-      </Card>
+        <Button
+          component="a"
+          href="https://x.com/Shonaaaliii"
+          target="_blank"
+          rel="noopener noreferrer"
+          startIcon={<FaTwitter />}
+          sx={linkButtonStyle}
+        >
+          Twitter
+        </Button>
+      </Box>
     </Box>
   );
 };
 
-export default Profile;
+// 🔥 Button Style
+const linkButtonStyle = {
+  fontFamily: 'Poppins, sans-serif',
+  fontWeight: '600',
+  textTransform: 'none',
+  background: 'rgba(255, 255, 255, 0.1)',
+  color: '#3d2c1e',
+  padding: '10px 20px',
+  borderRadius: '12px',
+  backdropFilter: 'blur(8px)',
+  '&:hover': {
+    background: 'rgba(255, 255, 255, 0.2)',
+    transform: 'scale(1.05)',
+    transition: 'all 0.3s ease',
+  },
+};
+
+export default ContactSection;
