@@ -179,7 +179,7 @@ const App = () => {
           width: 100%;
           position: relative;
           background: none;
-          margin-top: -130px; /* mountain will come after the content */
+          margin-top: 0px; /* mountain will come after the content */
         }
 
         .mountain-layer {
