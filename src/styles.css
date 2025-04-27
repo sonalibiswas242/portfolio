@@ -1,0 +1,47 @@
+/* src/styles.css */
+
+/* Body and global styling */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Static Gloss Effect */
+  div {
+    position: relative;
+  }
+  
+  /* Shiny gloss effect */
+  div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+    opacity: 0.2; /* Adjust opacity for less intense shine */
+    pointer-events: none; /* Ensures it doesn't block interactions with other elements */
+    z-index: 1;
+    /* Remove animation if you want it to be static */
+  }
+  
+  /* Cards */
+  .MuiCard-root {
+    background-color: rgba(255, 255, 255, 0.1); /* Slight transparency for cards */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Card shadow for depth */
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    border-radius: 10px; /* Rounded card corners */
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Hover effect on cards */
+  .MuiCard-root:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+  }
+  
+  .MuiTypography-root {
+    color: white;
+  }
+  
