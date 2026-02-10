@@ -1,248 +1,214 @@
-// src/App.js
-import React, { useEffect } from 'react';
-import { Container } from '@mui/material';
-import Profile from './components/Profile';
-import branchImage from './assets/images/tree.png';
-import mountainImage from './assets/images/mountain.png';
+import React, { useEffect, useRef } from "react";
+import { Container } from "@mui/material";
+import Profile from "./components/Profile";
+import PixelHeader from "./components/PixelHeader";
 
-const App = () => {
-  useEffect(() => {}, []);
+/* =========================================================
+   GREEN PIXEL HEATMAP BACKGROUND (VISIBLE + SCROLL SAFE)
+   ========================================================= */
+function GreenPixelHeatmap() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    const CELL = 26;
+    const GRID_ALPHA = 0.035;
+    const ENERGY_DENSITY = 0.06;
+
+    const BASE_ALPHA = 0.12;
+    const PULSE_ALPHA = 0.14;
+
+    const GREENS = [
+      [14, 92, 62],
+      [20, 120, 78],
+      [38, 160, 105],
+      [70, 200, 145],
+    ];
+
+    const pick = (v) =>
+      v < 0.35 ? GREENS[0] : v < 0.6 ? GREENS[1] : v < 0.85 ? GREENS[2] : GREENS[3];
+
+    const hash = (x, y) => {
+      let n = x * 374761393 + y * 668265263;
+      n = (n ^ (n >> 13)) * 1274126177;
+      return ((n ^ (n >> 16)) >>> 0) / 4294967296;
+    };
+
+    let W = 0,
+      H = 0,
+      cols = 0,
+      rows = 0,
+      dpr = 1;
+
+    let energy = [];
+
+    const resize = () => {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = window.innerWidth;
+      H = window.innerHeight;
+
+      canvas.width = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      canvas.style.width = `${W}px`;
+      canvas.style.height = `${H}px`;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      cols = Math.ceil(W / CELL);
+      rows = Math.ceil(H / CELL);
+
+      energy = [];
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          if (hash(x, y) < ENERGY_DENSITY) {
+            energy.push({
+              x,
+              y,
+              color: pick(hash(x + 7, y + 11)),
+              speed: 0.55 + hash(x + 19, y + 23) * 1.1,
+              phase: hash(x + 31, y + 41) * Math.PI * 2,
+            });
+          }
+        }
+      }
+    };
+
+    const drawGrid = () => {
+      ctx.save();
+      ctx.globalAlpha = GRID_ALPHA;
+      ctx.strokeStyle = "rgba(45,42,38,1)";
+      ctx.lineWidth = 1;
+
+      for (let x = 0; x <= cols; x++) {
+        ctx.beginPath();
+        ctx.moveTo(x * CELL + 0.5, 0);
+        ctx.lineTo(x * CELL + 0.5, H);
+        ctx.stroke();
+      }
+
+      for (let y = 0; y <= rows; y++) {
+        ctx.beginPath();
+        ctx.moveTo(0, y * CELL + 0.5);
+        ctx.lineTo(W, y * CELL + 0.5);
+        ctx.stroke();
+      }
+      ctx.restore();
+    };
+
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+
+    const frame = (t) => {
+      const time = t / 1000;
+
+      ctx.fillStyle = "rgba(255,252,242,0.55)";
+      ctx.fillRect(0, 0, W, H);
+
+      drawGrid();
+
+      for (let i = 0; i < energy.length; i++) {
+        const e = energy[i];
+        const pulse = 0.5 + 0.5 * Math.sin(time * e.speed + e.phase);
+        const a = BASE_ALPHA + pulse * PULSE_ALPHA;
+        const [r, g, b] = e.color;
+
+        ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+        ctx.fillRect(e.x * CELL, e.y * CELL, CELL, CELL);
+      }
+
+      requestAnimationFrame(frame);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    if (reduce?.matches) {
+      ctx.fillStyle = "rgba(255,252,242,0.55)";
+      ctx.fillRect(0, 0, W, H);
+      drawGrid();
+      for (let i = 0; i < energy.length; i++) {
+        const e = energy[i];
+        const [r, g, b] = e.color;
+        ctx.fillStyle = `rgba(${r},${g},${b},${BASE_ALPHA})`;
+        ctx.fillRect(e.x * CELL, e.y * CELL, CELL, CELL);
+      }
+    } else {
+      requestAnimationFrame(frame);
+    }
+
+    return () => window.removeEventListener("resize", resize);
+  }, []);
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
-      {/*  Background Layers */}
-      <div className="skyLayer"></div>
-      <div className="yellowLayer"></div>
-      <div className="sunsetLayer"></div>
-
-      {/*  Sun */}
-      <div className="sun"></div>
-
-      {/*  Sakura Branches */}
-      <div className="branch-layer">
-        <img src={branchImage} alt="Sakura Branch" />
-        <img src={branchImage} alt="Big Sakura Branch Left" />
-        <img src={branchImage} alt="Big Sakura Branch Right" />
-      </div>
-
-      {/*  Main Content */}
-      <div className="content-container">
-        <Container maxWidth="lg" style={{ backgroundColor: 'transparent', zIndex: 2 }}>
-          <Profile />
-        </Container>
-      </div>
-
-      {/*  Footer */}
-      <footer className="footer-section">
-        <div className="mountain-layer">
-          <img src={mountainImage} alt="Mountains" className="mountain-image" />
-        </div>
-      </footer>
-
-      {/*  Global Styles */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-        /*  Background Layers */
-        .skyLayer {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(to bottom, #edf2fb, #d7e3fc, #d7e3fc);
-          z-index: -3;
-          animation: fadeOutSky 40s forwards;
-        }
-
-        .yellowLayer {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(to bottom, #fff6cc, #fff2b2, #ffee9d);
-          opacity: 0;
-          z-index: -2;
-          animation: fadeInOutYellow 40s forwards;
-        }
-
-        .sunsetLayer {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(135deg, #ffecee, #fde2e4, #f1e3fc,  #e2ecf2);
-          opacity: 0;
-          z-index: -1;
-          animation: fadeInSunset 40s forwards;
-        }
-
-        /*  Sun */
-        .sun {
-          position: absolute;
-          top: 100px;
-          left: 0%;
-          width: 150px;
-          height: 150px;
-          border-radius: 50%;
-          background-color: #fff9b0;
-          box-shadow: 0 0 80px 30px rgba(255, 224, 102, 0.5);
-          overflow: visible;
-          z-index: 0;
-          opacity: 0.95;
-          transform: translateX(-50%);
-          animation: sunMoveAcrossSky 40s forwards, sunColorShift 40s forwards;
-          animation-timing-function: ease-in-out;
-        }
-
-        .sun::after {
-          content: "";
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 250%;
-          height: 250%;
-          transform: translate(-50%, -50%);
-          background: radial-gradient(circle, rgba(255,224,102,0.6) 0%, rgba(255,224,102,0.2) 50%, rgba(255,224,102,0) 100%);
-          border-radius: 50%;
-          pointer-events: none;
-        }
-
-        /*  Sakura Branch Layer */
-        .branch-layer {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          pointer-events: none;
-          z-index: 1;
-        }
-
-        .branch-layer img {
-          position: absolute;
-          object-fit: contain;
-          pointer-events: none;
-        }
-
-        .branch-layer img:nth-of-type(1) {
-          width: 550px;
-          transform: rotate(15deg) translate(10px, -140px);
-          top: 0;
-          left: 0;
-          z-index: 2;
-        }
-
-        .branch-layer img:nth-of-type(2) {
-          width: 750px;
-          transform: rotate(-10deg) translate(-150px, -100px);
-          top: 0;
-          left: 0;
-          opacity: 0.7;
-          z-index: 1;
-        }
-
-        .branch-layer img:nth-of-type(3) {
-          width: 800px;
-          transform: rotate(20deg) translate(400px, -180px) scaleX(-1);
-          top: 0;
-          right: 0;
-          opacity: 0.7;
-          z-index: 1;
-        }
-
-        /*  Mobile Responsiveness */
-        @media (max-width: 768px) {
-          .sun { width: 100px; height: 100px; }
-          .branch-layer img:nth-of-type(1) { width: 350px; }
-          .branch-layer img:nth-of-type(2) { width: 500px; }
-          .branch-layer img:nth-of-type(3) { width: 550px; }
-        }
-
-        @media (max-width: 480px) {
-          .sun { width: 80px; height: 80px; }
-          .branch-layer img:nth-of-type(1) { width: 280px; }
-          .branch-layer img:nth-of-type(2) { width: 400px; }
-          .branch-layer img:nth-of-type(3) { width: 450px; }
-        }
-
-        /*  Content */
-        .content-container {
-          position: relative;
-          z-index: 2;
-          background-color: transparent;
-        }
-
-        /*  Footer */
-        .footer-section {
-          width: 100%;
-          position: relative;
-          background: none;
-          margin-top: 20px; /* mountain will come after the content */
-        }
-
-        .mountain-layer {
-          width: 100%;
-          height: auto;
-          position: relative;
-          z-index: 2;
-        }
-
-        .mountain-image {
-          width: 100%;
-          height: auto;
-          display: block;
-          object-fit: cover;
-          pointer-events: none;
-          user-select: none;
-        }
-
-        /*  Animations */
-        @keyframes fadeOutSky {
-          0% { opacity: 1; }
-          30% { opacity: 0.7; }
-          60% { opacity: 0.4; }
-          90% { opacity: 0.2; }
-          100% { opacity: 0; }
-        }
-        @keyframes fadeInOutYellow {
-          0% { opacity: 0; }
-          20% { opacity: 0; }
-          40% { opacity: 1; }
-          70% { opacity: 0.8; }
-          100% { opacity: 0; }
-        }
-        @keyframes fadeInSunset {
-          0% { opacity: 0; }
-          50% { opacity: 0; }
-          70% { opacity: 0.5; }
-          100% { opacity: 1; }
-        }
-        @keyframes sunMoveAcrossSky {
-  0% {
-    transform: translate(5vw, 200px); /* Start lower */
-  }
-  30% {
-    transform: translate(5vw, -100px); /* Go up highest (brightest) */
-  }
-  60% {
-    transform: translate(5vw, -30px); /* Slightly lower */
-  }
-  100% {
-    transform: translate(5vw, 150px); /* Come down but not fully */
-  }
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 0,
+        pointerEvents: "none",
+      }}
+    />
+  );
 }
 
-        @keyframes sunColorShift {
-          0% { background-color: #fff9b0; }
-          30% { background-color: #ffe066; }
-          60% { background-color: #ffc04d; }
-          100% { background-color: #ff9966; }
+export default function App() {
+  return (
+    <div className="appRoot">
+      <GreenPixelHeatmap />
+
+      {/* ✅ Use PixelHeader */}
+      <PixelHeader />
+
+      <Container maxWidth="lg" className="pageWrap">
+        <Profile />
+      </Container>
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;700;800&display=swap');
+
+        * { box-sizing: border-box; }
+
+        html, body {
+          margin: 0;
+          padding: 0;
+          min-height: 100%;
+          height: auto;
+          overflow-x: hidden;
+          overflow-y: auto;
+          scroll-behavior: smooth;
+        }
+
+        body {
+          font-family: 'Poppins', sans-serif;
+          color: #2d2a26;
+          background:
+            radial-gradient(1200px 700px at 12% -10%, rgba(20,120,80,0.12), transparent 60%),
+            radial-gradient(900px 600px at 92% 12%, rgba(70,200,145,0.10), transparent 60%),
+            radial-gradient(800px 600px at 55% 110%, rgba(20,120,80,0.08), transparent 65%),
+            linear-gradient(180deg, #fffcf4 0%, #f3f1ea 100%);
+        }
+
+        #root { min-height: 100vh; }
+
+        .appRoot {
+          min-height: 100vh;
+          position: relative;
+          overflow: visible;
+        }
+
+        .pageWrap {
+          position: relative;
+          z-index: 1;
+          padding-top: 110px; /* ✅ room for PixelHeader */
+          padding-bottom: 90px;
+          min-height: 100vh;
         }
       `}</style>
     </div>
   );
-};
-
-export default App;
+}

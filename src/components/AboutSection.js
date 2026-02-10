@@ -1,77 +1,260 @@
 // src/components/AboutSection.js
-import React from 'react';
-import { Box, Typography, Card, CardContent } from '@mui/material';
+import React from "react";
+import { Box, Typography } from "@mui/material";
+
+const GROUPS = [
+  {
+    label: "education",
+    items: ["Grad Student @ UCR", "MS Computer Science"],
+  },
+  {
+    label: "experience",
+    items: ["AI Intern @NeuralSeek", "Software Developer Intern @Wecofy"],
+  },
+];
 
 const AboutSection = () => {
   return (
     <Box
       id="about"
       sx={{
-        minHeight: { xs: 'auto', md: '90vh' }, // Not fixed height, only on large screens
-        padding: { xs: '60px 20px 20px 20px', md: '80px 20px' },
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: { xs: '20px', md: '60px' }, // Add space below profile
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        px: { xs: 2, sm: 3, md: 4 },
+        py: { xs: 7, md: 10 },
+        scrollMarginTop: "110px",
       }}
     >
-      <Card
+      <Box
         sx={{
-          maxWidth: 900,
-          width: '100%',
-          borderRadius: '20px',
-          background: 'rgba(255, 255, 255, 0.07)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          boxShadow: '0 8px 32px rgba(255, 182, 193, 0.4)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          padding: { xs: '20px', md: '30px' },
+          width: "100%",
+          maxWidth: 1100,
+          borderRadius: "22px",
+
+          // Pixel-paper (no glass)
+          background:
+            "linear-gradient(180deg, rgba(255,252,242,0.98), rgba(248,246,238,0.98))",
+          border: "2px solid rgba(45,42,38,0.18)",
+          boxShadow: "10px 10px 0 rgba(45,42,38,0.10)",
+          position: "relative",
+          overflow: "hidden",
+          p: { xs: 2.5, sm: 3, md: 4 },
+
+          // subtle pixel texture behind content
+          "&:before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            background:
+              "repeating-linear-gradient(0deg, rgba(20,120,80,0.04) 0px, rgba(20,120,80,0.04) 1px, transparent 1px, transparent 26px)," +
+              "repeating-linear-gradient(90deg, rgba(20,120,80,0.04) 0px, rgba(20,120,80,0.04) 1px, transparent 1px, transparent 26px)",
+            opacity: 0.8,
+            pointerEvents: "none",
+          },
+
+          // micro-interaction on hover: slight lift + tighter shadow
+          transition: "transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
+          "&:hover": {
+            transform: "translateY(-1px)",
+            borderColor: "rgba(45,42,38,0.22)",
+            boxShadow: "12px 12px 0 rgba(45,42,38,0.10)",
+          },
         }}
       >
-        <CardContent
+        {/* Keyframes */}
+        <style>{`
+          @keyframes blinkCursor {
+            0%, 48% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+          }
+        `}</style>
+
+        <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
+            position: "relative",
+            zIndex: 1,
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1.2fr 0.8fr" },
+            gap: { xs: 3, md: 4 },
+            alignItems: "start",
           }}
         >
-          <Typography
-            variant="h4"
+          {/* LEFT: Keep your text */}
+          <Box>
+            {/* ABOUT + blinking cursor */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+              <Typography
+                sx={{
+                  fontFamily: '"Press Start 2P", system-ui',
+                  fontSize: "14px",
+                  letterSpacing: "0.18em",
+                  color: "rgba(20,120,80,0.95)",
+                }}
+              >
+                ABOUT
+              </Typography>
+
+              <Box
+                component="span"
+                sx={{
+                  fontFamily: '"Press Start 2P", system-ui',
+                  color: "rgba(20,120,80,0.95)",
+                  fontSize: "14px",
+                  lineHeight: 1,
+                  animation: "blinkCursor 1.15s steps(2, end) infinite",
+                  transform: "translateY(-1px)",
+                  userSelect: "none",
+                }}
+              >
+                ▮
+              </Box>
+            </Box>
+
+            {/* Subheading (mono, matches theme better than regular Poppins) */}
+            <Typography
+              sx={{
+                fontFamily: '"JetBrains Mono", ui-monospace, Menlo, monospace',
+                fontWeight: 800,
+                fontSize: { xs: "1.25rem", sm: "1.35rem", md: "1.55rem" },
+                color: "#2d2a26",
+                mb: 1.8,
+                letterSpacing: "0.2px",
+              }}
+            >
+              building things that feel solid, useful, and thoughtful
+            </Typography>
+
+            {/* Main paragraph (keep text; natural flow) */}
+            <Typography
+              sx={{
+                fontFamily: '"JetBrains Mono", ui-monospace, Menlo, monospace',
+                fontWeight: 600,
+                fontSize: { xs: "0.95rem", md: "1.02rem" },
+                lineHeight: 1.9,
+                color: "rgba(45,42,38,0.78)",
+                maxWidth: 820,
+              }}
+            >
+              I’m a Master’s student in Computer Science at UC Riverside, and I enjoy
+              building products end-to-end from clean interfaces to backend logic
+              and data-driven systems. I’ve worked on production-facing mobile
+              features through my internship at Wecofy, and last summer I also worked
+              as an AI Agent Developer, where I built and tested agent-based workflows
+              and automation. Right now, I’m exploring responsible machine learning
+              through my capstone work.
+            </Typography>
+          </Box>
+
+          {/* RIGHT: Contextual keyword blocks (Option 3), with micro interactions (Option 1) */}
+          <Box
             sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: '700',
-              color: '#3d2c1e',
-              textShadow: '0px 0px 8px rgba(255, 255, 255, 0.5)',
-              marginBottom: '20px',
+              borderRadius: "18px",
+              background: "rgba(255,252,242,0.96)",
+              border: "2px solid rgba(45,42,38,0.14)",
+              boxShadow: "8px 8px 0 rgba(45,42,38,0.08)",
+              p: { xs: 2.2, md: 2.6 },
+              position: "relative",
             }}
           >
-            About Me
-          </Typography>
+            <Typography
+              sx={{
+                fontFamily: '"JetBrains Mono", ui-monospace, Menlo, monospace',
+                fontWeight: 900,
+                fontSize: "0.95rem",
+                color: "rgba(45,42,38,0.82)",
+                mb: 1.6,
+              }}
+            >
+              // keywords
+            </Typography>
 
-          <Typography
-            variant="body1"
-            sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: '400',
-              fontSize: { xs: '1rem', md: '1.1rem' },
-              lineHeight: '1.8',
-              color: '#3d2c1e',
-              textShadow: '0px 0px 6px rgba(255, 255, 255, 0.4)',
-              textAlign: 'justify',
-            }}
-          >
-            I am currently pursuing my Master's degree in <strong>Computer Science</strong> at the <strong>University of California, Riverside</strong>, where I am refining my skills in the Data Science domain. I earned my Bachelor's degree in <strong>Computer Engineering</strong> from <strong>Savitribai Phule Pune University</strong> in India, where I built a strong foundation in Computer Science fundamentals.
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.4 }}>
+              {GROUPS.map((g) => (
+                <Box
+                  key={g.label}
+                  sx={{
+                    borderRadius: "14px",
+                    border: "1px solid rgba(20,120,80,0.18)",
+                    background: "rgba(255,252,242,0.92)",
+                    p: 1.4,
 
-My major interest lies in <strong>Web Development</strong> and <strong>Mobile Application Development</strong>. I love integrating complex designs with various backend features to build solutions that address issues we face in day-to-day life. Being a <strong>Mobile App Developer Intern</strong> for <strong>Wecofy</strong> gave me hands-on experience in designing, developing, and integrating APIs, which strengthened my interest in app development. This experience not only helped me gain knowledge of the basics of development but also gave me idea of industry-scale and standard application, which further became the building block of my projects.
+                    transition: "transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease",
+                    "&:hover": {
+                      transform: "translateY(-1px)",
+                      borderColor: "rgba(20,120,80,0.28)",
+                      boxShadow: "6px 6px 0 rgba(20,120,80,0.06)",
+                    },
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontFamily: '"JetBrains Mono", ui-monospace, Menlo, monospace',
+                      fontWeight: 900,
+                      fontSize: "0.92rem",
+                      color: "rgba(20,120,80,0.90)",
+                      mb: 1,
+                    }}
+                  >
+                    {"// " + g.label}
+                  </Typography>
 
-My recent interest in <strong>Data Science</strong> and <strong>Machine Learning</strong> developed during my coursework at UCR, and I am actively working towards advancing my knowledge in these fields. The courses I have taken during my Master's Program have shaped my understanding and deepened my interest in the domain of Data Science and Machine Learning.
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 1,
+                    }}
+                  >
+                    {g.items.map((item) => (
+                      <Box
+                        key={item}
+                        sx={{
+                          px: 1.2,
+                          py: 0.65,
+                          borderRadius: "999px",
+                          border: "1px solid rgba(45,42,38,0.14)",
+                          background: "rgba(255,252,242,0.95)",
+                          fontFamily: '"JetBrains Mono", ui-monospace, Menlo, monospace',
+                          fontWeight: 800,
+                          fontSize: "0.86rem",
+                          color: "rgba(45,42,38,0.78)",
+                          opacity: 0.92,
 
-Currently, I am working on my Capstone Project under the mentorship of <strong>Professor Mariam Salloum</strong>, which blends my interests in <strong>Ethical Responsibility, </strong><strong>Data Science and Machine Learning</strong> — allowing me to delve deeper into these fields.
+                          // micro interaction on chip hover
+                          transition: "transform 140ms ease, opacity 140ms ease, border-color 140ms ease",
+                          "&:hover": {
+                            transform: "translateX(1px)",
+                            opacity: 1,
+                            borderColor: "rgba(20,120,80,0.28)",
+                          },
+                        }}
+                      >
+                        {item}
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              ))}
+            </Box>
 
-
-          </Typography>
-        </CardContent>
-      </Card>
+            {/* subtle dashed divider accent at bottom */}
+            <Box
+              sx={{
+                mt: 2.2,
+                pt: 1.6,
+                borderTop: "1px dashed rgba(45,42,38,0.18)",
+                fontFamily: '"JetBrains Mono", ui-monospace, Menlo, monospace',
+                fontWeight: 700,
+                fontSize: "0.92rem",
+                color: "rgba(45,42,38,0.68)",
+              }}
+            >
+              I like shipping clean features and polishing the details.
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 };
