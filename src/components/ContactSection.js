@@ -146,7 +146,7 @@ export default function ContactSection() {
           >
             <Button
               component="a"
-              href="mailto:sonalibiswas242@gmail.com"
+              href="mailto:biswas.sonali2402@gmail.com"
               startIcon={<FaEnvelope style={{ color: "#fffdf7", fontSize: 18 }} />}
               sx={btnPixelPrimary}
             >

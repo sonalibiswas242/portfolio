@@ -223,7 +223,7 @@ const Profile = () => {
                     justifyContent: { xs: "center", md: "flex-end" },
                   }}
                 >
-                  <IconButton href="mailto:sonalibiswas242@gmail.com" target="_blank" sx={socialBtn}>
+                  <IconButton href="mailto: biswas.sonali2402@gmail.com" target="_blank" sx={socialBtn}>
                     <Email sx={{ fontSize: 30 }} />
                   </IconButton>
                   <IconButton
