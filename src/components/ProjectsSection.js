@@ -38,7 +38,6 @@ const SECTION_MAX = 1100;
 
 const panelBg = "#fffaf0";
 const borderDark = "rgba(45,42,38,0.22)";
-const borderLight = "rgba(255,255,255,0.85)";
 const green = "rgba(20,120,80,0.92)";
 
 const mono = '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace';

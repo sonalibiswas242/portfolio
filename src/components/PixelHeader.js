@@ -4,7 +4,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 const panelBg = "#fffaf0";
 const borderDark = "rgba(45,42,38,0.28)";
-const borderLight = "rgba(255,255,255,0.85)";
 const green = "rgba(20,120,80,0.92)";
 const mono = '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 const pixel = '"Press Start 2P", system-ui';

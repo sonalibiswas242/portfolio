@@ -166,7 +166,6 @@ const AboutSection = () => {
                 mb: 1.6,
               }}
             >
-              // keywords
             </Typography>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1.4 }}>
