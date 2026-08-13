@@ -24,11 +24,6 @@ const Profile = () => {
     AOS.init({ duration: 900, once: true, easing: "ease-out-cubic" });
   }, []);
 
-  // ✅ Measure pixel width so "SONALI" never gets cut.
-  // Re-measures once the Press Start 2P web font actually finishes
-  // loading — otherwise this races the font swap: it locks in the
-  // narrower fallback-font width, and the real (wider) pixel-font
-  // text gets clipped mid-word once the font arrives.
   useLayoutEffect(() => {
     const el = helloRef.current;
     if (!el) return;
@@ -44,20 +39,18 @@ const Profile = () => {
     return () => window.removeEventListener("resize", measure);
   }, []);
 
-  // Grouped for scanning, not a flat wall of 25 pills — but every
-  // skill renders with the same weight, no bolded "featured" subset.
   const SKILL_GROUPS = [
     {
       label: "Languages",
-      items: ["JavaScript (ES6+)", "TypeScript", "Python", "Java", "Kotlin", "SQL"],
+      items: ["JavaScript (ES6+)", "TypeScript", "Python", "Java", "C++", "Go", "Kotlin", "SQL"],
     },
     {
       label: "Frameworks & Libraries",
-      items: ["React", "React Native", "Node.js", "Express", "Spring Boot"],
+      items: ["React", "React Native", "Node.js", "Express", "Spring Boot", "FastAPI", "scikit-learn"],
     },
     {
       label: "Tools & Platforms",
-      items: ["Firebase", "MongoDB", "PostgreSQL", "Docker", "Android", "Maven", "Kafka", "Apache", "GraphQL"],
+      items: ["Firebase", "MongoDB", "PostgreSQL", "Redis", "Docker", "Android", "Maven", "Kafka", "Apache", "GraphQL", "AWS", "Apache Spark", "Prometheus", "CMake"],
     },
     {
       label: "Concepts",
@@ -66,13 +59,16 @@ const Profile = () => {
         "REST APIs",
         "Machine Learning",
         "JWT/Auth",
+        "TLS",
         "CI/CD Basics",
         "System Design (Basics)",
+        "Big Data",
         "Advanced Operating Systems",
         "Advanced Computer Vision",
-        "Computer Security",
+        "Computer Networks & Security",
         "Software Security",
         "Web & Information Retrieval",
+        "GenAI Workflows",
       ],
     },
   ];
@@ -103,9 +99,6 @@ const Profile = () => {
         gap: { xs: 7, md: 10 },
       }}
     >
-      {/* =========================
-          HERO / TERMINAL WINDOW
-         ========================= */}
       <Box
         id="home"
         sx={{
@@ -126,7 +119,6 @@ const Profile = () => {
               alignItems: "start",
             }}
           >
-            {/* LEFT */}
             <Box sx={{ minWidth: 0, pt: 0.5 }}>
               <Typography
                 sx={{
@@ -165,7 +157,6 @@ const Profile = () => {
                 {helloText}
               </Typography>
 
-              {/* Plain, high-contrast — the one sentence a recruiter needs, no wordplay */}
               <Typography
                 sx={{
                   mt: 2.2,
@@ -192,7 +183,6 @@ const Profile = () => {
               </Box>
             </Box>
 
-            {/* RIGHT (image + icons under it) */}
             <Box
               sx={{
                 display: "flex",
@@ -201,7 +191,6 @@ const Profile = () => {
                 gap: 2.2,
               }}
             >
-              {/* "Character select" portrait frame */}
               <Box
                 sx={{
                   position: "relative",
@@ -210,7 +199,6 @@ const Profile = () => {
                   "@media (prefers-reduced-motion: reduce)": { animation: "none" },
                 }}
               >
-                {/* Corner brackets */}
                 {[
                   { top: 0, left: 0, borderWidth: "3px 0 0 3px" },
                   { top: 0, right: 0, borderWidth: "3px 3px 0 0" },
@@ -246,7 +234,6 @@ const Profile = () => {
                 >
                   <img src={profileImg} alt="Sonali" />
 
-                  {/* Scanline sweep */}
                   <Box
                     sx={{
                       position: "absolute",
@@ -285,7 +272,6 @@ const Profile = () => {
             </Box>
           </Box>
 
-          {/* SKILLS */}
           <Box
             sx={{
               mt: { xs: 1.4, md: 1.8 },
@@ -332,7 +318,6 @@ const Profile = () => {
               ))}
             </Box>
 
-            {/* One quirky aside — kept quiet, out of the recruiter's scan path */}
             <Typography
               sx={{
                 mt: 2.2,
@@ -381,9 +366,6 @@ const Profile = () => {
         </TerminalWindow>
       </Box>
 
-      {/* =========================
-          OTHER SECTIONS (keeps scroll working)
-         ========================= */}
       <Box sx={{ width: "100%" }}>
         <AboutSection />
       </Box>
@@ -403,12 +385,6 @@ const Profile = () => {
   );
 };
 
-// Matched pair with openToRolesPill below — same shape, size, font,
-// border color, and shadow/hover behavior. Filled vs. bordered is the
-// only intentional difference (primary action vs. status badge).
-// One style, shared by both hero pills (same Box element type, same
-// sx keys, same values) — `filled` is the only thing that changes,
-// so VIEW PROJECTS and open_to_work.sh are pixel-identical in size.
 const heroPill = (filled) => ({
   boxSizing: "border-box",
   display: "inline-flex",
@@ -443,9 +419,6 @@ const heroPill = (filled) => ({
   },
 });
 
-// Bordered diamond that flips around its vertical axis (scaleX
-// oscillates to fake the 3D spin) — an outline gem, not a filled
-// dot, in the same accent as everything else.
 const spinDiamond = {
   width: 9,
   height: 9,
@@ -471,7 +444,6 @@ const socialBtn = {
   },
 };
 
-// Every skill renders with the same weight — no featured subset.
 const skillChip = {
   px: 1.1,
   py: 0.56,
