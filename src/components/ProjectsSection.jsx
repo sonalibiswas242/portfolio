@@ -253,6 +253,16 @@ const ProjectsSection = () => {
         images: [],
       },
       {
+        name: "Batchgate",
+        type: "SYSTEMS",
+        shortDescription: "C++ LLM inference gateway with request batching, priority scheduling, and an LRU cache — 53% higher throughput under load.",
+        longDescription:
+          "Batchgate is an LLM inference gateway built from scratch in C++, sitting in front of a local llama.cpp model. It implements an epoll-based event loop and hand-rolled HTTP/1.1 parser, a priority-heap request scheduler, an LRU prompt cache, and a request-batching engine that groups concurrent requests into micro-batches before submitting them to the model as a single decode call — the same core technique used by production serving engines like vLLM and TensorRT-LLM. Benchmarked against a real TinyLlama-1.1B model with a custom load-testing script: batching improved throughput by 53% and cut p95 latency by roughly 30% versus unbatched requests under identical concurrent load.",
+        github: "https://github.com/sonalibiswas242/batchgate",
+        stack: ["C++", "llama.cpp", "epoll", "CMake", "Systems Design"],
+        images: [],
+      },
+      {
         name: "GoShield",
         type: "SYSTEMS",
         shortDescription: "TLS-terminating reverse proxy in Go with JWT auth middleware and Prometheus metrics.",
