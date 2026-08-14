@@ -76,8 +76,6 @@ const Profile = () => {
   const STATUS_LINES = [
     { k: "status", v: "OPEN_TO_WORK", accent: true },
     { k: "role", v: "Software Engineer" },
-    { k: "auth", v: "OPT / H-1B eligible" },
-    { k: "base", v: "CS, M.S. — UC Riverside" },
   ];
 
   const [bootTime] = useState(() => {
