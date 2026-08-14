@@ -17,7 +17,7 @@ const btnPixelBase = {
   border: `1px solid ${colors.border}`,
   background: colors.bgPanelAlt,
   color: colors.textPrimary,
-  transition: "transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease",
+  transition: "transform 160ms cubic-bezier(0.34,1.4,0.64,1), box-shadow 160ms ease, border-color 160ms ease",
   "&:hover": {
     transform: "translateY(-2px)",
     borderColor: colors.neonGreen,
@@ -58,38 +58,48 @@ export default function ContactSection() {
       }}
     >
       <TerminalWindow title="~/contact.sh" command="./contact.sh --send" accent={colors.neonMagenta} maxWidth={1300} dataAos="fade-left">
+        <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.0 }}>
+          <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: { xs: "1.4rem", md: "1.7rem" }, color: colors.neonMagenta, lineHeight: 1 }}>
+            *
+          </Box>
+          <Typography
+            sx={{
+              fontFamily: display,
+              fontWeight: 700,
+              fontSize: { xs: "1.3rem", md: "1.7rem" },
+              color: colors.textPrimary,
+              textAlign: "left",
+            }}
+          >
+            Let’s build something that feels great to use.
+          </Typography>
+        </Box>
 
         <Typography
           sx={{
             mt: 1.2,
-            fontFamily: display,
-            fontWeight: 700,
-            fontSize: { xs: "1.3rem", md: "1.7rem" },
-            color: colors.textPrimary,
-            textAlign: "left",
-          }}
-        >
-          Let’s build something that feels great to use.
-        </Typography>
-
-        <Typography
-          sx={{
-            mt: 1.0,
             fontFamily: mono,
             fontWeight: 500,
             fontSize: { xs: "0.88rem", md: "0.94rem" },
             color: colors.textDim,
             lineHeight: 1.9,
             textAlign: "left",
-            maxWidth: 900,
+            maxWidth: 780,
           }}
         >
-          If you’re hiring for entry-level software roles or want to collaborate on a project,
-          I’d love to chat. The fastest way to reach me is email — and you can also find my work on GitHub.
+          If you're hiring for entry-level software roles or want to collaborate on a project,
+          I'd love to chat. The fastest way to reach me is email — and you can also find my work on GitHub.
         </Typography>
 
-        {/* Divider */}
-        <Box sx={{ mt: 2.6, borderTop: `1px dashed ${colors.border}`, pt: 2.2 }} />
+        {/* Divider with inline label instead of a bare rule — small
+            detail, but it reads as intentional structure not filler */}
+        <Box sx={{ mt: 3.0, mb: 2.4, display: "flex", alignItems: "center", gap: 1.4 }}>
+          <Box sx={{ flex: 1, borderTop: `1px dashed ${colors.border}` }} />
+          <Typography sx={{ fontFamily: mono, fontWeight: 700, fontSize: "0.72rem", color: colors.textDim, opacity: 0.55, letterSpacing: "0.04em" }}>
+            REACH_OUT
+          </Typography>
+          <Box sx={{ flex: 1, borderTop: `1px dashed ${colors.border}` }} />
+        </Box>
 
         {/* Buttons */}
         <Box
@@ -144,19 +154,35 @@ export default function ContactSection() {
           </Button>
         </Box>
 
-        {/* Tiny footer line */}
-        <Typography
+        {/* Tip line, styled as a terminal comment for consistency with
+            the rest of the site's `// comment` motif */}
+        <Box
           sx={{
-            mt: 2.2,
-            fontFamily: mono,
-            fontWeight: 600,
-            fontSize: "0.86rem",
-            color: colors.textDim,
-            textAlign: "left",
+            mt: 2.8,
+            px: 1.4,
+            py: 1.0,
+            borderRadius: "6px",
+            border: `1px dashed ${colors.border}`,
+            background: colors.bgPanelAlt,
+            display: "inline-flex",
           }}
         >
-          Tip: include “Portfolio” in your subject — I’ll respond faster! (And I’ll know you’re not a bot.)
-        </Typography>
+          <Typography
+            sx={{
+              fontFamily: mono,
+              fontWeight: 600,
+              fontSize: "0.82rem",
+              color: colors.textDim,
+              opacity: 0.85,
+              textAlign: "left",
+            }}
+          >
+            <Box component="span" sx={{ color: colors.neonGreen, opacity: 0.8 }}>
+              {"// "}
+            </Box>
+            tip: include "Portfolio" in your subject line — I'll know you're not a bot.
+          </Typography>
+        </Box>
       </TerminalWindow>
     </Box>
   );

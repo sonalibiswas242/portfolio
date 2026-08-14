@@ -1,7 +1,7 @@
 // src/components/TerminalWindow.js
 // Hacker-terminal window: classic macOS-style traffic-light title
 // bar, dark panel, neon accent border glow, optional "$ command"
-// flavor line.
+// flavor line with a live blinking cursor.
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { fonts, colors, textGlow, neonBox } from "../theme";
@@ -60,18 +60,33 @@ export default function TerminalWindow({
         <Box sx={{ width: 11, height: 11, borderRadius: "50%", background: "#27c93f" }} />
 
         {title ? (
-          <Typography
-            sx={{
-              ml: 1.2,
-              fontFamily: mono,
-              fontWeight: 700,
-              fontSize: "0.78rem",
-              color: colors.textDim,
-              letterSpacing: "0.02em",
-            }}
-          >
-            {title}
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.7, ml: 1.2 }}>
+            <Box
+              component="span"
+              sx={{
+                fontFamily: "Georgia, serif",
+                fontStyle: "italic",
+                fontWeight: 700,
+                fontSize: "0.9rem",
+                color: accent,
+                opacity: 0.85,
+                lineHeight: 1,
+              }}
+            >
+              *
+            </Box>
+            <Typography
+              sx={{
+                fontFamily: mono,
+                fontWeight: 700,
+                fontSize: "0.78rem",
+                color: colors.textDim,
+                letterSpacing: "0.02em",
+              }}
+            >
+              {title}
+            </Typography>
+          </Box>
         ) : null}
 
         <Box sx={{ flex: 1 }} />
@@ -83,7 +98,7 @@ export default function TerminalWindow({
             borderRadius: "50%",
             background: accent,
             boxShadow: `0 0 6px 2px ${accent}88`,
-            animation: "termWindowLed 1.8s ease-in-out infinite",
+            animation: "termWindowLed var(--dur-pulse, 1.8s) var(--ease-standard, ease-in-out) infinite",
             "@keyframes termWindowLed": {
               "0%, 100%": { opacity: 1 },
               "50%": { opacity: 0.35 },
@@ -101,12 +116,29 @@ export default function TerminalWindow({
               fontWeight: 600,
               fontSize: "0.82rem",
               color: colors.textDim,
+              display: "flex",
+              alignItems: "center",
+              gap: 0.7,
             }}
           >
             <Box component="span" sx={{ color: accent, fontWeight: 900, textShadow: textGlow(accent, 5) }}>
               $
-            </Box>{" "}
+            </Box>
             {command}
+            <Box
+              component="span"
+              sx={{
+                display: "inline-block",
+                width: "0.5em",
+                height: "0.95em",
+                background: accent,
+                animation: "termCursorBlink var(--dur-blink, 1s) steps(2, end) infinite",
+                "@keyframes termCursorBlink": {
+                  "0%, 48%": { opacity: 1 },
+                  "50%, 100%": { opacity: 0 },
+                },
+              }}
+            />
           </Typography>
         ) : null}
         {children}

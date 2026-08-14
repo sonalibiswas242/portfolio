@@ -10,8 +10,8 @@ function Item({ text }) {
   return (
     <Box
       sx={{
-        px: 1.2,
-        py: 0.9,
+        px: 1.3,
+        py: 1.0,
         borderRadius: "8px",
         border: `1px solid ${colors.border}`,
         background: colors.bgPanelAlt,
@@ -19,12 +19,12 @@ function Item({ text }) {
         fontWeight: 600,
         fontSize: { xs: "0.86rem", md: "0.9rem" },
         color: colors.textPrimary,
-        opacity: 0.9,
+        opacity: 0.92,
         display: "flex",
         alignItems: "center",
         gap: 0.9,
-        transition: "border-color 140ms ease, transform 140ms ease",
-        "&:hover": { borderColor: colors.neonGreen, transform: "translateX(3px)" },
+        transition: "border-color 160ms ease, transform 160ms ease, background 160ms ease",
+        "&:hover": { borderColor: colors.neonGreen, transform: "translateX(3px)", background: colors.bgPanel },
         "& .bullet": { transition: "transform 140ms ease" },
         "&:hover .bullet": { transform: "translateX(2px)" },
       }}
@@ -33,6 +33,35 @@ function Item({ text }) {
         ▸
       </Box>
       {text}
+    </Box>
+  );
+}
+
+// Small "file panel" wrapper, matching the about.md/about.json chrome
+// pattern used elsewhere — each column reads as its own log stream.
+function LogPanel({ filename, accent, children }) {
+  return (
+    <Box sx={{ borderRadius: "8px", border: `1px solid ${colors.border}`, background: colors.bgPanelAlt, overflow: "hidden" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0.8,
+          px: 1.6,
+          py: 0.9,
+          borderBottom: `1px solid ${colors.border}`,
+          fontFamily: mono,
+          fontWeight: 700,
+          fontSize: "0.72rem",
+          color: colors.textDim,
+          opacity: 0.75,
+          letterSpacing: "0.03em",
+        }}
+      >
+        <Box sx={{ width: 7, height: 7, borderRadius: "50%", background: accent, opacity: 0.85 }} />
+        {filename}
+      </Box>
+      <Box sx={{ p: { xs: 1.6, md: 1.8 }, display: "flex", flexDirection: "column", gap: 1.1 }}>{children}</Box>
     </Box>
   );
 }
@@ -50,22 +79,25 @@ export default function MoreSection() {
       }}
     >
       <TerminalWindow title="~/status.log" command="tail -f status.log" accent={colors.neonAmber} dataAos="zoom-in">
+        <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.0 }}>
+          <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: { xs: "1.4rem", md: "1.7rem" }, color: colors.neonAmber, lineHeight: 1 }}>
+            *
+          </Box>
+          <Typography
+            sx={{
+              fontFamily: display,
+              fontWeight: 700,
+              fontSize: { xs: "1.3rem", md: "1.7rem" },
+              color: colors.textPrimary,
+            }}
+          >
+            What I’m working on right now
+          </Typography>
+        </Box>
 
         <Typography
           sx={{
             mt: 1.2,
-            fontFamily: display,
-            fontWeight: 700,
-            fontSize: { xs: "1.3rem", md: "1.7rem" },
-            color: colors.textPrimary,
-          }}
-        >
-          What I’m working on right now
-        </Typography>
-
-        <Typography
-          sx={{
-            mt: 1.0,
             fontFamily: mono,
             fontWeight: 500,
             fontSize: { xs: "0.88rem", md: "0.94rem" },
@@ -77,58 +109,88 @@ export default function MoreSection() {
           A snapshot of what I’m actively building and improving — this changes as I grow.
         </Typography>
 
-        {/* Two-column content */}
+        {/* Two-column log panels */}
         <Box
           sx={{
-            mt: 2.6,
+            mt: 3.0,
             display: "grid",
             gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-            gap: 2.4,
+            gap: 2.2,
           }}
         >
-          {/* Currently Building */}
           <Box>
             <Typography
               sx={{
                 fontFamily: mono,
                 fontWeight: 900,
-                fontSize: "0.96rem",
+                fontSize: "0.9rem",
                 color: colors.neonGreen,
-                mb: 1.4,
+                mb: 1.2,
+                letterSpacing: "0.02em",
               }}
             >
-              Currently Building
+              {"// building"}
             </Typography>
-
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.2 }}>
+            <LogPanel filename="building.log" accent={colors.neonGreen}>
               <Item text="Portfolio UI with pixel-inspired design system" />
-              <Item text="Systems projects: ER-Flow, Shortly, GoShield" />
+              <Item text="Systems projects: Batchgate, ER-Flow, Shortly, GoShield" />
               <Item text="Full-stack features with clean API contracts" />
               <Item text="Mobile apps using React Native + Firebase" />
-            </Box>
+            </LogPanel>
           </Box>
 
-          {/* Currently Learning */}
           <Box>
             <Typography
               sx={{
                 fontFamily: mono,
                 fontWeight: 900,
-                fontSize: "0.96rem",
+                fontSize: "0.9rem",
                 color: colors.neonCyan,
-                mb: 1.4,
+                mb: 1.2,
+                letterSpacing: "0.02em",
               }}
             >
-              Currently Learning
+              {"// learning"}
             </Typography>
-
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.2 }}>
+            <LogPanel filename="learning.log" accent={colors.neonCyan}>
               <Item text="Improving DSA problem-solving for interviews" />
               <Item text="Writing cleaner, testable backend code" />
               <Item text="Understanding ML bias & evaluation deeply" />
               <Item text="Designing scalable front-end architectures" />
-            </Box>
+            </LogPanel>
           </Box>
+        </Box>
+
+        {/* Live-log flavor line — ties to the `tail -f` command shown above,
+            reinforces "this is a stream that's still running" */}
+        <Box
+          sx={{
+            mt: 2.4,
+            display: "flex",
+            alignItems: "center",
+            gap: 0.8,
+            fontFamily: mono,
+            fontWeight: 600,
+            fontSize: "0.78rem",
+            color: colors.textDim,
+            opacity: 0.6,
+          }}
+        >
+          <Box
+            sx={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: colors.neonAmber,
+              boxShadow: `0 0 5px 1px ${colors.neonAmber}88`,
+              animation: "statusLivePulse 1.7s ease-in-out infinite",
+              "@keyframes statusLivePulse": {
+                "0%, 100%": { opacity: 1 },
+                "50%": { opacity: 0.3 },
+              },
+            }}
+          />
+          watching for changes...
         </Box>
       </TerminalWindow>
     </Box>

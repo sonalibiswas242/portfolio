@@ -18,22 +18,23 @@ function NavLink({ label, accent, active, onClick }) {
     <Box
       component="button"
       onClick={onClick}
+      aria-current={active ? "true" : undefined}
       sx={{
         position: "relative",
         appearance: "none",
-        background: "transparent",
+        background: active ? `${accent}14` : "transparent",
         border: "none",
-        borderRadius: "6px",
+        borderRadius: "8px",
         cursor: "pointer",
         fontFamily: mono,
         fontWeight: 800,
         fontSize: "0.86rem",
         letterSpacing: "0.02em",
         color: active ? accent : colors.textDim,
-        px: 1.0,
+        px: 1.1,
         py: 0.55,
-        transition: "color 140ms ease, transform 140ms ease",
-        "&:hover": { color: accent, transform: "translateY(-1px)" },
+        transition: "color 140ms ease, transform 140ms ease, background 160ms ease",
+        "&:hover": { color: accent, transform: "translateY(-1px)", background: `${accent}0f` },
         "&:active": { transform: "translateY(0) scale(0.96)" },
         "&::after": {
           content: '""',
@@ -43,6 +44,7 @@ function NavLink({ label, accent, active, onClick }) {
           bottom: -1,
           height: 2,
           background: accent,
+          boxShadow: active ? `0 0 6px 0.5px ${accent}` : "none",
           transform: active ? "scaleX(1)" : "scaleX(0)",
           transformOrigin: "left",
           transition: "transform 180ms ease",
@@ -104,7 +106,9 @@ export default function PixelHeader() {
           boxShadow: `0 14px 30px rgba(0,0,0,0.45), ${neonBox(colors.neonGreen, 10, 14)}`,
         }}
       >
-        {/* Traffic-light dots, matching every card's title bar */}
+        {/* Traffic-light dots + wordmark, now carrying the same asterisk
+            signature used in Skills / About / Projects headlines — ties
+            the whole site to one repeated mark instead of one per section */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, pl: 0.6 }}>
           <Box sx={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f56" }} />
           <Box sx={{ width: 10, height: 10, borderRadius: "50%", background: "#ffbd2e" }} />
@@ -114,12 +118,38 @@ export default function PixelHeader() {
             sx={{
               display: { xs: "none", sm: "flex" },
               alignItems: "center",
-              gap: 0.8,
+              gap: 0.9,
               ml: 1.4,
               pl: 1.4,
               borderLeft: `1px solid ${colors.border}`,
             }}
           >
+            <Box
+              component="span"
+              sx={{
+                fontFamily: "Georgia, serif",
+                fontStyle: "italic",
+                fontWeight: 700,
+                fontSize: "0.92rem",
+                color: colors.neonGreen,
+                lineHeight: 1,
+              }}
+            >
+              *
+            </Box>
+            <Typography
+              sx={{
+                fontFamily: mono,
+                fontWeight: 700,
+                fontSize: { xs: "0.76rem", md: "0.84rem" },
+                color: colors.textDim,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              ~/sonali
+            </Typography>
             <Box
               sx={{
                 width: 6,
@@ -134,24 +164,11 @@ export default function PixelHeader() {
                 },
               }}
             />
-            <Typography
-              sx={{
-                fontFamily: mono,
-                fontWeight: 700,
-                fontSize: { xs: "0.76rem", md: "0.84rem" },
-                color: colors.textDim,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              ~/sonali
-            </Typography>
           </Box>
         </Box>
 
         {/* Desktop nav */}
-        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 0.6 }}>
+        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 0.4 }}>
           {NAV.map(({ label, target, accent }) => (
             <NavLink
               key={label}
@@ -165,6 +182,7 @@ export default function PixelHeader() {
 
         {/* Mobile menu */}
         <IconButton
+          aria-label="Open navigation menu"
           sx={{
             display: { xs: "flex", md: "none" },
             width: 40,
@@ -173,6 +191,8 @@ export default function PixelHeader() {
             border: `1px solid ${colors.border}`,
             background: colors.bgPanelAlt,
             color: colors.neonGreen,
+            transition: "transform 160ms ease, box-shadow 160ms ease",
+            "&:hover": { transform: "translateY(-1px)", boxShadow: neonBox(colors.neonGreen, 8, 10) },
           }}
           onClick={() => setDrawerOpen(true)}
         >
@@ -186,7 +206,7 @@ export default function PixelHeader() {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         ModalProps={{
-          BackdropProps: { style: { backgroundColor: "rgba(0,0,0,0.6)" } },
+          BackdropProps: { style: { backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(3px)" } },
         }}
         PaperProps={{
           sx: {
@@ -204,13 +224,14 @@ export default function PixelHeader() {
               background: colors.bgPanel,
               boxShadow: `0 10px 24px rgba(0,0,0,0.4), ${neonBox(colors.neonGreen, 8, 12)}`,
               overflow: "hidden",
-              mb: 1.6,
+              mb: 1.8,
             }}
           >
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "space-between",
                 gap: 0.8,
                 px: 1.4,
                 py: 1,
@@ -218,32 +239,55 @@ export default function PixelHeader() {
                 borderBottom: `1px solid ${colors.border}`,
               }}
             >
-              <Box sx={{ width: 9, height: 9, borderRadius: "50%", background: "#ff5f56" }} />
-              <Box sx={{ width: 9, height: 9, borderRadius: "50%", background: "#ffbd2e" }} />
-              <Box sx={{ width: 9, height: 9, borderRadius: "50%", background: "#27c93f" }} />
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
+                <Box sx={{ width: 9, height: 9, borderRadius: "50%", background: "#ff5f56" }} />
+                <Box sx={{ width: 9, height: 9, borderRadius: "50%", background: "#ffbd2e" }} />
+                <Box sx={{ width: 9, height: 9, borderRadius: "50%", background: "#27c93f" }} />
+              </Box>
+              <IconButton
+                onClick={() => setDrawerOpen(false)}
+                aria-label="Close navigation menu"
+                sx={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: "7px",
+                  color: colors.textDim,
+                  "&:hover": { color: colors.neonGreen },
+                }}
+              >
+                <Typography sx={{ fontFamily: mono, fontWeight: 900, fontSize: "0.9rem", lineHeight: 1 }}>×</Typography>
+              </IconButton>
             </Box>
             <Box sx={{ p: 1.4 }}>
-              <Typography sx={{ fontFamily: mono, fontWeight: 900, fontSize: "0.86rem", color: colors.textPrimary }}>
-                menu.sh
-              </Typography>
-              <Typography sx={{ mt: 0.4, fontFamily: mono, color: colors.textDim, fontSize: "0.78rem" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.7 }}>
+                <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: "0.9rem", color: colors.neonGreen, lineHeight: 1 }}>
+                  *
+                </Box>
+                <Typography sx={{ fontFamily: mono, fontWeight: 900, fontSize: "0.86rem", color: colors.textPrimary }}>
+                  menu.sh
+                </Typography>
+              </Box>
+              <Typography sx={{ mt: 0.5, fontFamily: mono, color: colors.textDim, fontSize: "0.78rem", opacity: 0.8 }}>
                 $ jump --section
               </Typography>
             </Box>
           </Box>
 
-          <List sx={{ p: 0 }}>
+          <List sx={{ p: 0, display: "flex", flexDirection: "column", gap: 0.9 }}>
             {NAV.map(({ label, target, accent }) => {
               const active = activeSection === target;
               return (
-                <ListItem key={label} disablePadding sx={{ mb: 1 }}>
+                <ListItem key={label} disablePadding>
                   <ListItemButton
                     onClick={() => handleScroll(target)}
+                    aria-current={active ? "true" : undefined}
                     sx={{
                       borderRadius: "10px",
                       border: `1px solid ${active ? accent : colors.border}`,
                       background: active ? `${accent}14` : colors.bgPanel,
-                      "&:hover": { borderColor: accent },
+                      boxShadow: active ? neonBox(accent, 8, 10) : "none",
+                      transition: "border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease",
+                      "&:hover": { borderColor: accent, transform: "translateX(2px)" },
                     }}
                   >
                     <ListItemText

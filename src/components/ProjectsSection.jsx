@@ -86,6 +86,17 @@ const TYPE_COLORS = {
   WEB: colors.neonMagenta,
 };
 
+// Faux unix permission string per type — SYSTEMS gets executable bits,
+// data/web/mobile get read-only — a small, coherent nod to `ls -la`
+// rather than decoration with no meaning.
+const TYPE_PERMS = {
+  SYSTEMS: "-rwxr-xr-x",
+  ML: "-rw-r--r--",
+  MOBILE: "-rw-r--r--",
+  DATA: "-rw-r--r--",
+  WEB: "-rwxr-xr-x",
+};
+
 function Tag({ text }) {
   return (
     <Box
@@ -115,6 +126,7 @@ function Tag({ text }) {
 
 function ProjectTile({ project, onOpen, index = 0 }) {
   const accent = TYPE_COLORS[project.type] || colors.neonGreen;
+  const perms = TYPE_PERMS[project.type] || "-rw-r--r--";
   return (
     <Box
       data-aos="fade-up"
@@ -127,12 +139,10 @@ function ProjectTile({ project, onOpen, index = 0 }) {
         background: colors.bgPanel,
         border: `1px solid ${colors.border}`,
         borderTop: `3px solid ${accent}`,
-        p: 2.0,
         display: "flex",
         flexDirection: "column",
-        gap: 1.2,
         overflow: "hidden",
-        transition: "transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
+        transition: "transform 180ms cubic-bezier(0.2,0.8,0.2,1), box-shadow 180ms ease, border-color 180ms ease",
         "&:hover": {
           transform: "translateY(-4px)",
           borderColor: accent,
@@ -140,60 +150,86 @@ function ProjectTile({ project, onOpen, index = 0 }) {
         },
       }}
     >
-      {project.type ? (
-        <Box
-          sx={{
-            alignSelf: "flex-start",
-            px: 1.0,
-            py: 0.4,
-            borderRadius: "6px",
-            border: `1px solid ${accent}`,
-            background: colors.bgPanelAlt,
-            fontFamily: mono,
-            fontWeight: 900,
-            fontSize: "0.66rem",
-            letterSpacing: "0.08em",
-            color: accent,
-          }}
-        >
-          {project.type}
-        </Box>
-      ) : null}
-
-      <Typography sx={{ fontFamily: mono, fontWeight: 800, fontSize: "1.0rem", color: colors.textPrimary }}>
-        {project.name}
-      </Typography>
-
-      <Typography
+      {/* Faux `ls -la` row — ties the tile directly to the command shown
+          in the terminal header above, instead of being pure decoration */}
+      <Box
         sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          px: 1.6,
+          py: 0.7,
+          borderBottom: `1px solid ${colors.border}`,
+          background: colors.bgPanelAlt,
           fontFamily: mono,
-          fontWeight: 500,
-          fontSize: "0.88rem",
-          lineHeight: 1.75,
+          fontWeight: 600,
+          fontSize: "0.66rem",
           color: colors.textDim,
-          minHeight: 58,
+          opacity: 0.55,
+          letterSpacing: "0.01em",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
         }}
       >
-        {project.shortDescription}
-      </Typography>
+        {perms}
+      </Box>
 
-      {project.stack?.length ? (
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {project.stack.slice(0, 6).map((t) => (
-            <Tag key={t} text={t} />
-          ))}
-        </Box>
-      ) : null}
-
-      <Box sx={{ display: "flex", gap: 1.2, mt: "auto", pt: 0.5, flexWrap: "wrap" }}>
-        <Button sx={btnPrimary} onClick={() => onOpen(project)}>
-          View
-        </Button>
-        {project.github ? (
-          <Button sx={btnBase} href={project.github} target="_blank" rel="noreferrer">
-            GitHub
-          </Button>
+      <Box sx={{ p: 2.0, display: "flex", flexDirection: "column", gap: 1.2, flex: 1 }}>
+        {project.type ? (
+          <Box
+            sx={{
+              alignSelf: "flex-start",
+              px: 1.0,
+              py: 0.4,
+              borderRadius: "6px",
+              border: `1px solid ${accent}`,
+              background: colors.bgPanelAlt,
+              fontFamily: mono,
+              fontWeight: 900,
+              fontSize: "0.66rem",
+              letterSpacing: "0.08em",
+              color: accent,
+            }}
+          >
+            {project.type}
+          </Box>
         ) : null}
+
+        <Typography sx={{ fontFamily: mono, fontWeight: 800, fontSize: "1.04rem", color: colors.textPrimary }}>
+          {project.name}
+        </Typography>
+
+        <Typography
+          sx={{
+            fontFamily: mono,
+            fontWeight: 500,
+            fontSize: "0.88rem",
+            lineHeight: 1.75,
+            color: colors.textDim,
+            minHeight: 58,
+          }}
+        >
+          {project.shortDescription}
+        </Typography>
+
+        {project.stack?.length ? (
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            {project.stack.slice(0, 6).map((t) => (
+              <Tag key={t} text={t} />
+            ))}
+          </Box>
+        ) : null}
+
+        <Box sx={{ display: "flex", gap: 1.2, mt: "auto", pt: 0.5, flexWrap: "wrap" }}>
+          <Button sx={btnPrimary} onClick={() => onOpen(project)}>
+            View
+          </Button>
+          {project.github ? (
+            <Button sx={btnBase} href={project.github} target="_blank" rel="noreferrer">
+              GitHub
+            </Button>
+          ) : null}
+        </Box>
       </Box>
     </Box>
   );
@@ -362,35 +398,45 @@ const ProjectsSection = () => {
       }}
     >
       <TerminalWindow title="~/projects.json" command="ls -la projects/" accent={colors.neonMagenta} maxWidth={1300}>
-        <Typography sx={{ fontFamily: display, fontWeight: 700, fontSize: { xs: "1.3rem", md: "1.7rem" }, color: colors.textPrimary }}>
-          Things I’ve built
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.0 }}>
+          <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: { xs: "1.5rem", md: "1.9rem" }, color: colors.neonMagenta, lineHeight: 1 }}>
+            *
+          </Box>
+          <Typography sx={{ fontFamily: display, fontWeight: 700, fontSize: { xs: "1.36rem", md: "1.76rem" }, color: colors.textPrimary, letterSpacing: "0.1px" }}>
+            Things I’ve built
+          </Typography>
+        </Box>
 
-        <Typography sx={{ mt: 1.0, fontFamily: mono, fontWeight: 500, fontSize: { xs: "0.88rem", md: "0.94rem" }, color: colors.textDim, lineHeight: 1.9, maxWidth: 900 }}>
+        <Typography sx={{ mt: 1.2, fontFamily: mono, fontWeight: 500, fontSize: { xs: "0.88rem", md: "0.94rem" }, color: colors.textDim, lineHeight: 1.9, maxWidth: 900 }}>
           A mix of mobile apps, web projects, and experiments — focused on clean UI, solid APIs, and strong fundamentals.
         </Typography>
 
         {/* Featured */}
-        <Box sx={{ mt: 3.0, display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" }, gap: 2.0 }}>
+        <Box sx={{ mt: 3.6, display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" }, gap: 2.2 }}>
           {projects.featured.map((p, i) => (
             <ProjectTile key={p.name} project={p} onOpen={handleOpen} index={i} />
           ))}
         </Box>
 
         {/* More */}
-        <Box sx={{ mt: 4.0, borderTop: `1px dashed ${colors.border}`, pt: 3.0 }}>
-          <Typography sx={{ fontFamily: mono, fontWeight: 900, fontSize: "1.0rem", color: colors.textPrimary, mb: 1.6 }}>
-            More projects
-          </Typography>
+        <Box sx={{ mt: 5.0, borderTop: `1px dashed ${colors.border}`, pt: 3.4 }}>
+          <Box sx={{ display: "flex", alignItems: "baseline", gap: 1, mb: 2.0 }}>
+            <Typography sx={{ fontFamily: mono, fontWeight: 900, fontSize: "1.02rem", color: colors.textPrimary }}>
+              More projects
+            </Typography>
+            <Typography sx={{ fontFamily: mono, fontWeight: 600, fontSize: "0.76rem", color: colors.textDim, opacity: 0.5 }}>
+              {`// ${projects.other.length} entries`}
+            </Typography>
+          </Box>
 
-          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" }, gap: 2.0 }}>
+          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" }, gap: 2.2 }}>
             {projects.other.map((p, i) => (
               <ProjectTile key={p.name} project={p} onOpen={handleOpen} index={i} />
             ))}
           </Box>
         </Box>
 
-        {/* Modal */}
+        {/* Modal — file-chrome header to match About's file-viewer treatment */}
         <Modal open={open} onClose={handleClose}>
           <Box
             sx={{
@@ -400,87 +446,116 @@ const ProjectsSection = () => {
               transform: "translate(-50%, -50%)",
               width: { xs: "92%", md: 980 },
               maxHeight: "90vh",
-              overflowY: "auto",
-              borderRadius: "18px",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              borderRadius: "14px",
               background: colors.bgPanel,
-              border: `3px solid ${colors.borderBright}`,
-              boxShadow: `10px 10px 0 ${colors.neonMagenta}`,
-              p: { xs: 2.2, md: 3.0 },
+              border: `2px solid ${colors.borderBright}`,
+              boxShadow: `8px 8px 0 ${colors.neonMagenta}`,
             }}
           >
             {selectedProject && (
-              <Box sx={{ position: "relative" }}>
-                <Typography sx={{ fontFamily: mono, fontWeight: 900, fontSize: { xs: "1.25rem", md: "1.7rem" }, color: colors.textPrimary, mb: 1.2 }}>
-                  {selectedProject.name}
-                </Typography>
-
-                <Typography sx={{ fontFamily: mono, fontWeight: 500, fontSize: { xs: "0.9rem", md: "0.98rem" }, color: colors.textDim, lineHeight: 1.9, maxWidth: 860 }}>
-                  {selectedProject.longDescription}
-                </Typography>
-
-                <Box sx={{ display: "flex", gap: 1.2, flexWrap: "wrap", mt: 2.2 }}>
-                  {selectedProject.github ? (
-                    <Button sx={btnPrimary} href={selectedProject.github} target="_blank" rel="noreferrer">
-                      GitHub
-                    </Button>
-                  ) : null}
-                  {selectedProject.paper ? (
-                    <Button sx={btnBase} href={selectedProject.paper} target="_blank" rel="noreferrer">
-                      Paper
-                    </Button>
-                  ) : null}
-                  <Button sx={btnBase} onClick={handleClose}>
-                    ❮ BACK
-                  </Button>
-                </Box>
-
-                {/* ✅ Screenshots: ALL projects show as mobile portrait cards (no square cropping) */}
-                {selectedProject.images?.length ? (
-                  <Box
+              <>
+                {/* File-chrome strip, matching about.md/about.json pattern */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.8,
+                    px: { xs: 2.0, md: 2.6 },
+                    py: 1.1,
+                    borderBottom: `1px solid ${colors.border}`,
+                    background: colors.bgPanelAlt,
+                    flexShrink: 0,
+                  }}
+                >
+                  <Box sx={{ width: 8, height: 8, borderRadius: "50%", background: colors.neonMagenta, opacity: 0.85 }} />
+                  <Typography
                     sx={{
-                      mt: 2.6,
-                      display: "grid",
-                      gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
-                      gap: 1.6,
+                      fontFamily: mono,
+                      fontWeight: 700,
+                      fontSize: "0.76rem",
+                      color: colors.textDim,
+                      letterSpacing: "0.02em",
                     }}
                   >
-                    {selectedProject.images.map((src, idx) => (
-                      <Box
-                        key={idx}
-                        sx={{
-                          borderRadius: "12px",
-                          border: `1px solid ${colors.border}`,
-                          background: colors.bgPanelAlt,
-                          padding: "10px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          aspectRatio: "9 / 16",
-                          overflow: "hidden",
-                        }}
-                      >
+                    {`${selectedProject.name.toLowerCase().replace(/\s+/g, "-")}/README.md`}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ p: { xs: 2.4, md: 3.2 }, overflowY: "auto" }}>
+                  <Typography sx={{ fontFamily: mono, fontWeight: 900, fontSize: { xs: "1.3rem", md: "1.76rem" }, color: colors.textPrimary, mb: 1.4 }}>
+                    {selectedProject.name}
+                  </Typography>
+
+                  <Typography sx={{ fontFamily: mono, fontWeight: 500, fontSize: { xs: "0.9rem", md: "0.98rem" }, color: colors.textDim, lineHeight: 1.9, maxWidth: 860 }}>
+                    {selectedProject.longDescription}
+                  </Typography>
+
+                  <Box sx={{ display: "flex", gap: 1.2, flexWrap: "wrap", mt: 2.4 }}>
+                    {selectedProject.github ? (
+                      <Button sx={btnPrimary} href={selectedProject.github} target="_blank" rel="noreferrer">
+                        GitHub
+                      </Button>
+                    ) : null}
+                    {selectedProject.paper ? (
+                      <Button sx={btnBase} href={selectedProject.paper} target="_blank" rel="noreferrer">
+                        Paper
+                      </Button>
+                    ) : null}
+                    <Button sx={btnBase} onClick={handleClose}>
+                      ❮ BACK
+                    </Button>
+                  </Box>
+
+                  {selectedProject.images?.length ? (
+                    <Box
+                      sx={{
+                        mt: 2.8,
+                        display: "grid",
+                        gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
+                        gap: 1.6,
+                      }}
+                    >
+                      {selectedProject.images.map((src, idx) => (
                         <Box
-                          component="img"
-                          src={src}
-                          alt="Project screenshot"
+                          key={idx}
                           sx={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "contain",
-                            borderRadius: "8px",
+                            borderRadius: "12px",
+                            border: `1px solid ${colors.border}`,
+                            background: colors.bgPanelAlt,
+                            padding: "10px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            aspectRatio: "9 / 16",
+                            overflow: "hidden",
                           }}
-                        />
-                      </Box>
-                    ))}
-                  </Box>
-                ) : (
-                  <Box sx={{ mt: 2.2 }}>
-                    <Typography sx={{ fontFamily: mono, fontWeight: 600, color: colors.textDim, fontSize: "0.9rem" }}>
-                      (Screenshots coming soon)
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
+                        >
+                          <Box
+                            component="img"
+                            src={src}
+                            alt="Project screenshot"
+                            sx={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "contain",
+                              borderRadius: "8px",
+                            }}
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  ) : (
+                    <Box sx={{ mt: 2.4 }}>
+                      <Typography sx={{ fontFamily: mono, fontWeight: 600, color: colors.textDim, fontSize: "0.9rem", opacity: 0.7 }}>
+                        {"// screenshots coming soon"}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </>
             )}
           </Box>
         </Modal>

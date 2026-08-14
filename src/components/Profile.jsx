@@ -73,6 +73,13 @@ const Profile = () => {
     },
   ];
 
+  const STATUS_LINES = [
+    { k: "status", v: "OPEN_TO_WORK", accent: true },
+    { k: "role", v: "Software Engineer" },
+    { k: "auth", v: "OPT / H-1B eligible" },
+    { k: "base", v: "CS, M.S. — UC Riverside" },
+  ];
+
   const [bootTime] = useState(() => {
     const now = new Date();
     const parts = new Intl.DateTimeFormat("en-CA", {
@@ -113,223 +120,311 @@ const Profile = () => {
         <TerminalWindow title="~/home.sh" command="whoami" accent={colors.neonGreen}>
           <Box
             sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "1.25fr 0.75fr" },
-              gap: { xs: 3, md: 4 },
-              alignItems: "start",
+              position: "relative",
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `radial-gradient(${colors.border} 1px, transparent 1px)`,
+                backgroundSize: "22px 22px",
+                opacity: 0.35,
+                pointerEvents: "none",
+                zIndex: 0,
+              },
             }}
           >
-            <Box sx={{ minWidth: 0, pt: 0.5 }}>
-              <Typography
-                sx={{
-                  fontFamily: mono,
-                  fontWeight: 500,
-                  fontSize: "0.72rem",
-                  color: colors.textDim,
-                  opacity: 0.55,
-                  mb: 1.2,
-                }}
-              >
-                {`[${bootTime}] loading profile...`}
-              </Typography>
-
-              <Typography
-                ref={helloRef}
-                sx={{
-                  fontFamily: pixel,
-                  fontSize: { xs: "16px", sm: "20px", md: "26px" },
-                  lineHeight: 1.45,
-                  letterSpacing: "1px",
-                  fontWeight: 900,
-                  color: colors.neonGreen,
-                  textShadow: textGlow(colors.neonGreen, 5),
-                  animation: helloWidth
-                    ? "typewriterPx 1.9s steps(26, end) forwards, caret 850ms steps(2, end) infinite"
-                    : "none",
-                  display: "inline-block",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  width: helloWidth ? `${helloWidth}px` : "auto",
-                  maxWidth: "100%",
-                  borderRight: `4px solid ${colors.neonGreen}`,
-                }}
-              >
-                {helloText}
-              </Typography>
-
-              <Typography
-                sx={{
-                  mt: 2.2,
-                  fontFamily: mono,
-                  fontWeight: 700,
-                  fontSize: { xs: "1.0rem", sm: "1.08rem", md: "1.15rem" },
-                  color: colors.textPrimary,
-                  lineHeight: 1.75,
-                  maxWidth: 680,
-                }}
-              >
-                CS Grad — Open to Software Engineering Roles
-              </Typography>
-
-              <Box sx={{ mt: 2.4, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1.2 }}>
-                <Box component="a" href="#projects" sx={heroPill(true)}>
-                  ▶ VIEW PROJECTS
-                </Box>
-
-                <Box sx={heroPill(false)}>
-                  <Box sx={spinDiamond} />
-                  {"OPEN TO WORK"}
-                </Box>
-              </Box>
-            </Box>
-
             <Box
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: { xs: "center", md: "flex-end" },
-                gap: 2.2,
+                position: "relative",
+                zIndex: 1,
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", md: "1.3fr 0.7fr" },
+                gap: { xs: 4, md: 5 },
+                alignItems: "start",
               }}
             >
-              <Box
-                sx={{
-                  position: "relative",
-                  p: 1.6,
-                  animation: "floatY 4.5s ease-in-out infinite",
-                  "@media (prefers-reduced-motion: reduce)": { animation: "none" },
-                }}
-              >
-                {[
-                  { top: 0, left: 0, borderWidth: "3px 0 0 3px" },
-                  { top: 0, right: 0, borderWidth: "3px 3px 0 0" },
-                  { bottom: 0, left: 0, borderWidth: "0 0 3px 3px" },
-                  { bottom: 0, right: 0, borderWidth: "0 3px 3px 0" },
-                ].map((pos, i) => (
-                  <Box
-                    key={i}
-                    sx={{
-                      position: "absolute",
-                      width: 20,
-                      height: 20,
-                      borderStyle: "solid",
-                      borderColor: colors.neonGreen,
-                      filter: `drop-shadow(0 0 4px ${colors.neonGreen}aa)`,
-                      ...pos,
-                    }}
-                  />
-                ))}
-
-                <Box
+              <Box sx={{ minWidth: 0, pt: 0.5 }}>
+                <Typography
                   sx={{
-                    width: { xs: 160, sm: 180, md: 200 },
-                    height: { xs: 160, sm: 180, md: 200 },
-                    position: "relative",
-                    borderRadius: "8px",
-                    overflow: "hidden",
-                    border: `2px solid ${colors.border}`,
-                    boxShadow: neonBox(colors.neonGreen, 16, 20),
-                    background: colors.bgPanelAlt,
-                    "& img": { width: "100%", height: "100%", objectFit: "cover", display: "block" },
+                    fontFamily: mono,
+                    fontWeight: 500,
+                    fontSize: "0.7rem",
+                    color: colors.textDim,
+                    opacity: 0.5,
+                    mb: 1.6,
+                    letterSpacing: "0.02em",
                   }}
                 >
-                  <img src={profileImg} alt="Sonali" />
+                  {`[${bootTime}] loading profile...`}
+                </Typography>
 
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      inset: 0,
-                      pointerEvents: "none",
-                      background: `linear-gradient(180deg, transparent 0%, ${colors.neonGreen}22 45%, ${colors.neonGreen}55 50%, ${colors.neonGreen}22 55%, transparent 100%)`,
-                      backgroundSize: "100% 300%",
-                      animation: "scanSweep 3.4s linear infinite",
-                      mixBlendMode: "screen",
-                    }}
-                  />
+                <Typography
+                  ref={helloRef}
+                  sx={{
+                    fontFamily: pixel,
+                    fontSize: { xs: "16px", sm: "20px", md: "27px" },
+                    lineHeight: 1.45,
+                    letterSpacing: "1px",
+                    fontWeight: 900,
+                    color: colors.neonGreen,
+                    textShadow: textGlow(colors.neonGreen, 5),
+                    animation: helloWidth
+                      ? "typewriterPx 1.9s steps(26, end) forwards, caret 850ms steps(2, end) infinite"
+                      : "none",
+                    display: "inline-block",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    width: helloWidth ? `${helloWidth}px` : "auto",
+                    maxWidth: "100%",
+                    borderRight: `4px solid ${colors.neonGreen}`,
+                  }}
+                >
+                  {helloText}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    mt: 2.8,
+                    fontFamily: mono,
+                    fontWeight: 700,
+                    fontSize: { xs: "1.05rem", sm: "1.15rem", md: "1.28rem" },
+                    color: colors.textPrimary,
+                    lineHeight: 1.6,
+                    maxWidth: 640,
+                  }}
+                >
+                  CS Grad — Open to Software Engineering Roles
+                </Typography>
+
+                <Typography
+                  sx={{
+                    mt: 1.0,
+                    fontFamily: mono,
+                    fontWeight: 500,
+                    fontSize: "0.86rem",
+                    color: colors.textDim,
+                    lineHeight: 1.7,
+                    maxWidth: 560,
+                  }}
+                >
+                  Systems-minded engineer who ships — from raw sockets to distributed
+                  caches to production ML pipelines.
+                </Typography>
+
+                <Box sx={{ mt: 3.0, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1.2 }}>
+                  <Box component="a" href="#projects" sx={heroPill(true)}>
+                    ▶ VIEW PROJECTS
+                  </Box>
+                  <Box component="a" href="#contact" sx={heroPill(false)}>
+                    CONTACT
+                  </Box>
+                </Box>
+
+                <Box sx={{ mt: 4.4 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.7, mb: 2.2 }}>
+                    <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: "0.95rem", color: colors.neonCyan, lineHeight: 1 }}>
+                      *
+                    </Box>
+                    <Typography
+                      sx={{
+                        fontFamily: pixel,
+                        fontSize: "10px",
+                        letterSpacing: "0.14em",
+                        color: colors.neonCyan,
+                        textShadow: textGlow(colors.neonCyan, 6),
+                      }}
+                    >
+                      SKILLS
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 2.0 }}>
+                    {SKILL_GROUPS.map((group) => (
+                      <Box key={group.label} sx={{ display: "flex", gap: 1.6, alignItems: "flex-start" }}>
+                        <Box
+                          sx={{
+                            width: { xs: 84, sm: 118 },
+                            flexShrink: 0,
+                            pt: 0.5,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            textAlign: "right",
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontFamily: mono,
+                              fontWeight: 700,
+                              fontSize: "0.68rem",
+                              letterSpacing: "0.06em",
+                              textTransform: "uppercase",
+                              color: colors.textDim,
+                              opacity: 0.75,
+                              lineHeight: 1.3,
+                            }}
+                          >
+                            {group.label}
+                          </Typography>
+                        </Box>
+                        <Box
+                          sx={{
+                            width: "2px",
+                            alignSelf: "stretch",
+                            background: colors.border,
+                            opacity: 0.6,
+                            flexShrink: 0,
+                          }}
+                        />
+                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.6, flex: 1 }}>
+                          {group.items.map((s) => (
+                            <Box key={s} sx={skillChip}>
+                              {s}
+                            </Box>
+                          ))}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
                 </Box>
               </Box>
 
               <Box
                 sx={{
                   display: "flex",
-                  gap: 1.2,
-                  flexWrap: "wrap",
-                  justifyContent: { xs: "center", md: "flex-end" },
+                  flexDirection: "column",
+                  alignItems: { xs: "center", md: "flex-end" },
+                  gap: 2.0,
                 }}
               >
-                <IconButton href="mailto: sonalibiswas.codes@gmail.com" target="_blank" sx={socialBtn}>
-                  <Email sx={{ fontSize: 26 }} />
-                </IconButton>
-                <IconButton href="https://www.linkedin.com/in/sonalibiswas242/" target="_blank" sx={socialBtn}>
-                  <LinkedIn sx={{ fontSize: 26 }} />
-                </IconButton>
-                <IconButton href="https://github.com/sonalibiswas242" target="_blank" sx={socialBtn}>
-                  <GitHub sx={{ fontSize: 26 }} />
-                </IconButton>
-                <IconButton href="https://x.com/Shonaaaliii" target="_blank" sx={socialBtn}>
-                  <Twitter sx={{ fontSize: 26 }} />
-                </IconButton>
-              </Box>
-            </Box>
-          </Box>
+                <Box
+                  sx={{
+                    position: "relative",
+                    p: 1.6,
+                    animation: "floatY 5s ease-in-out infinite",
+                    "@media (prefers-reduced-motion: reduce)": { animation: "none" },
+                  }}
+                >
+                  {[
+                    { top: 0, left: 0, borderWidth: "3px 0 0 3px" },
+                    { top: 0, right: 0, borderWidth: "3px 3px 0 0" },
+                    { bottom: 0, left: 0, borderWidth: "0 0 3px 3px" },
+                    { bottom: 0, right: 0, borderWidth: "0 3px 3px 0" },
+                  ].map((pos, i) => (
+                    <Box
+                      key={i}
+                      sx={{
+                        position: "absolute",
+                        width: 20,
+                        height: 20,
+                        borderStyle: "solid",
+                        borderColor: colors.neonGreen,
+                        filter: `drop-shadow(0 0 4px ${colors.neonGreen}aa)`,
+                        ...pos,
+                      }}
+                    />
+                  ))}
 
-          <Box
-            sx={{
-              mt: { xs: 1.4, md: 1.8 },
-            }}
-          >
-            <Typography
-              sx={{
-                fontFamily: pixel,
-                fontSize: "11px",
-                letterSpacing: "0.12em",
-                color: colors.neonCyan,
-                textShadow: textGlow(colors.neonCyan, 6),
-                mb: 2.0,
-              }}
-            >
-              SKILLS
-            </Typography>
-
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.8 }}>
-              {SKILL_GROUPS.map((group) => (
-                <Box key={group.label}>
-                  <Typography
+                  <Box
                     sx={{
-                      mb: 0.8,
-                      fontFamily: mono,
-                      fontWeight: 700,
-                      fontSize: "0.72rem",
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      color: colors.textDim,
-                      opacity: 0.7,
+                      width: { xs: 172, sm: 190, md: 210 },
+                      height: { xs: 172, sm: 190, md: 210 },
+                      position: "relative",
+                      borderRadius: "8px",
+                      overflow: "hidden",
+                      border: `2px solid ${colors.border}`,
+                      boxShadow: neonBox(colors.neonGreen, 16, 20),
+                      background: colors.bgPanelAlt,
+                      "& img": { width: "100%", height: "100%", objectFit: "cover", display: "block" },
                     }}
                   >
-                    {group.label}
-                  </Typography>
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.7 }}>
-                    {group.items.map((s) => (
-                      <Box key={s} sx={skillChip}>
-                        {s}
-                      </Box>
-                    ))}
+                    <img src={profileImg} alt="Sonali" />
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        inset: 0,
+                        pointerEvents: "none",
+                        background: `linear-gradient(180deg, transparent 0%, ${colors.neonGreen}22 45%, ${colors.neonGreen}55 50%, ${colors.neonGreen}22 55%, transparent 100%)`,
+                        backgroundSize: "100% 300%",
+                        animation: "scanSweep 3.6s linear infinite",
+                        mixBlendMode: "screen",
+                      }}
+                    />
                   </Box>
                 </Box>
-              ))}
-            </Box>
 
-            <Typography
-              sx={{
-                mt: 2.2,
-                fontFamily: mono,
-                fontWeight: 500,
-                fontSize: "0.74rem",
-                color: colors.textDim,
-                opacity: 0.4,
-              }}
-            >
-              {"// currently: 60% coffee, 40% stack traces"}
-            </Typography>
+                <Box
+                  sx={{
+                    width: { xs: 172, sm: 190, md: 210 },
+                    border: `1px solid ${colors.border}`,
+                    borderRadius: "8px",
+                    background: colors.bgPanelAlt,
+                    px: 1.4,
+                    py: 1.2,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0.65,
+                  }}
+                >
+                  {STATUS_LINES.map((line) => (
+                    <Box key={line.k} sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
+                      <Typography
+                        sx={{
+                          fontFamily: mono,
+                          fontWeight: 600,
+                          fontSize: "0.66rem",
+                          color: colors.textDim,
+                          opacity: 0.6,
+                        }}
+                      >
+                        {line.k}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontFamily: mono,
+                          fontWeight: 800,
+                          fontSize: "0.66rem",
+                          color: line.accent ? colors.neonGreen : colors.textPrimary,
+                          textShadow: line.accent ? textGlow(colors.neonGreen, 4) : "none",
+                          textAlign: "right",
+                        }}
+                      >
+                        {line.accent ? (
+                          <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
+                            <Box sx={statusDot} />
+                            {line.v}
+                          </Box>
+                        ) : (
+                          line.v
+                        )}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1.1,
+                    flexWrap: "wrap",
+                    justifyContent: { xs: "center", md: "flex-end" },
+                  }}
+                >
+                  <IconButton href="mailto: sonalibiswas.codes@gmail.com" target="_blank" sx={socialBtn}>
+                    <Email sx={{ fontSize: 24 }} />
+                  </IconButton>
+                  <IconButton href="https://www.linkedin.com/in/sonalibiswas242/" target="_blank" sx={socialBtn}>
+                    <LinkedIn sx={{ fontSize: 24 }} />
+                  </IconButton>
+                  <IconButton href="https://github.com/sonalibiswas242" target="_blank" sx={socialBtn}>
+                    <GitHub sx={{ fontSize: 24 }} />
+                  </IconButton>
+                  <IconButton href="https://x.com/Shonaaaliii" target="_blank" sx={socialBtn}>
+                    <Twitter sx={{ fontSize: 24 }} />
+                  </IconButton>
+                </Box>
+              </Box>
+            </Box>
           </Box>
 
           <style>{`
@@ -341,26 +436,17 @@ const Profile = () => {
               0%, 48% { border-right-color: ${colors.neonGreen}; }
               50%, 100% { border-right-color: transparent; }
             }
-            @keyframes neonPulse {
-              0%, 100% { filter: brightness(1); }
-              50% { filter: brightness(1.35); }
-            }
             @keyframes floatY {
               0%, 100% { transform: translateY(0); }
               50% { transform: translateY(-8px); }
             }
-            @keyframes gemSpin {
-              0%   { transform: rotate(45deg) scaleX(1); }
-              50%  { transform: rotate(45deg) scaleX(0.12); }
-              100% { transform: rotate(45deg) scaleX(1); }
-            }
-            @keyframes dotBlink {
-              0%, 45% { opacity: 1; transform: scale(1); }
-              55%, 100% { opacity: 0.25; transform: scale(0.9); }
-            }
             @keyframes scanSweep {
               0% { background-position: 0 -100%; }
               100% { background-position: 0 200%; }
+            }
+            @keyframes statusPulse {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0.35; }
             }
           `}</style>
         </TerminalWindow>
@@ -419,13 +505,13 @@ const heroPill = (filled) => ({
   },
 });
 
-const spinDiamond = {
-  width: 9,
-  height: 9,
+const statusDot = {
+  width: 6,
+  height: 6,
   borderRadius: "50%",
   background: colors.neonGreen,
-  boxShadow: `0 0 6px 1px ${colors.neonGreen}66`,
-  animation: "dotBlink 1.1s ease-in-out infinite",
+  boxShadow: `0 0 5px 1px ${colors.neonGreen}88`,
+  animation: "statusPulse 1.6s ease-in-out infinite",
 };
 
 const socialBtn = {
@@ -445,14 +531,14 @@ const socialBtn = {
 };
 
 const skillChip = {
-  px: 1.1,
-  py: 0.56,
+  px: 1.0,
+  py: 0.5,
   borderRadius: "6px",
   border: `1px solid ${colors.border}`,
   background: colors.bgPanelAlt,
   fontFamily: mono,
   fontWeight: 750,
-  fontSize: { xs: "0.74rem", md: "0.8rem" },
+  fontSize: { xs: "0.7rem", md: "0.76rem" },
   color: colors.textDim,
   cursor: "default",
   transition: "background 140ms ease, color 140ms ease, border-color 140ms ease, transform 140ms ease, box-shadow 200ms ease",
