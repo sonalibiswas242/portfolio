@@ -80,9 +80,7 @@ export default function MoreSection() {
     >
       <TerminalWindow title="~/status.log" command="tail -f status.log" accent={colors.neonAmber} dataAos="zoom-in">
         <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.0 }}>
-          <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: { xs: "1.4rem", md: "1.7rem" }, color: colors.neonAmber, lineHeight: 1 }}>
-            *
-          </Box>
+          
           <Typography
             sx={{
               fontFamily: display,
