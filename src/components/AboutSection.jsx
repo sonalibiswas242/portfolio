@@ -20,12 +20,12 @@ const GROUPS = [
 // Bio split into lines so each one can carry a line number, like a real
 // file viewer — reinforces the `cat about.md` command shown above it.
 const BIO_LINES = [
-  "I recently completed my Master's in Computer Science at UC Riverside,",
-  "building products end-to-end — from clean interfaces to backend logic",
+  "I recently completed my Master's in CS UC Riverside,",
+  "building products end-to-end from clean interfaces to backend logic",
   "and data-driven systems. I've interned as an AI Agent Developer at",
   "NeuralSeek, building and testing agent-based workflows, and as a",
   "Mobile App Developer at Wecofy, shipping production-facing features.",
-  "Right now I'm exploring responsible machine learning through my capstone.",
+  "Right now I'm exploring responsible machine learning.",
 ];
 
 const AboutSection = () => {
@@ -60,9 +60,6 @@ const AboutSection = () => {
           {/* LEFT — file-viewer treatment: line numbers + live cursor */}
           <Box>
             <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.0, mb: 2.4 }}>
-              <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: { xs: "1.4rem", md: "1.7rem" }, color: colors.neonCyan, lineHeight: 1 }}>
-                *
-              </Box>
               <Typography
                 sx={{
                   fontFamily: display,

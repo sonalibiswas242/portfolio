@@ -399,9 +399,7 @@ const ProjectsSection = () => {
     >
       <TerminalWindow title="~/projects.json" command="ls -la projects/" accent={colors.neonMagenta} maxWidth={1300}>
         <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.0 }}>
-          <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: { xs: "1.5rem", md: "1.9rem" }, color: colors.neonMagenta, lineHeight: 1 }}>
-            *
-          </Box>
+          
           <Typography sx={{ fontFamily: display, fontWeight: 700, fontSize: { xs: "1.36rem", md: "1.76rem" }, color: colors.textPrimary, letterSpacing: "0.1px" }}>
             Things I’ve built
           </Typography>

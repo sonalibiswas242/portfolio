@@ -59,9 +59,7 @@ export default function ContactSection() {
     >
       <TerminalWindow title="~/contact.sh" command="./contact.sh --send" accent={colors.neonMagenta} maxWidth={1300} dataAos="fade-left">
         <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.0 }}>
-          <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: { xs: "1.4rem", md: "1.7rem" }, color: colors.neonMagenta, lineHeight: 1 }}>
-            *
-          </Box>
+          
           <Typography
             sx={{
               fontFamily: display,

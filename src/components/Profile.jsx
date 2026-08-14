@@ -220,9 +220,6 @@ const Profile = () => {
 
                 <Box sx={{ mt: 4.4 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.7, mb: 2.2 }}>
-                    <Box component="span" sx={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontWeight: 700, fontSize: "0.95rem", color: colors.neonCyan, lineHeight: 1 }}>
-                      *
-                    </Box>
                     <Typography
                       sx={{
                         fontFamily: pixel,

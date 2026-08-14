@@ -124,19 +124,7 @@ export default function PixelHeader() {
               borderLeft: `1px solid ${colors.border}`,
             }}
           >
-            <Box
-              component="span"
-              sx={{
-                fontFamily: "Georgia, serif",
-                fontStyle: "italic",
-                fontWeight: 700,
-                fontSize: "0.92rem",
-                color: colors.neonGreen,
-                lineHeight: 1,
-              }}
-            >
-              *
-            </Box>
+            
             <Typography
               sx={{
                 fontFamily: mono,
