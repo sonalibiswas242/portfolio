@@ -1,6 +1,6 @@
-# Sonali Biswas — Portfolio
+# Portfolio
 
-My personal portfolio site.
+This is my personal portfolio site.
 
 🔗 **Live site:** https://sonalibiswas242.github.io/portfolio
 
